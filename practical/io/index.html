@@ -1,0 +1,2300 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <link rel="canonical" href="http://nams.ericmjl.com/practical/io/">
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.9">
+    
+    
+      
+        <title>Chapter 7: Graph I/O - Network Analysis Made Simple</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.36ee6aaa.min.css">
+      
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.83bccb1f.min.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#4051b5">
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../css/nb_mods.css">
+    
+      <link rel="stylesheet" href="../../css/apidocs.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="http://nams.ericmjl.com/" title="Network Analysis Made Simple" class="md-header-nav__button md-logo" aria-label="Network Analysis Made Simple">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zM128 134c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm0 64c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm253.4 250H96c-17.7 0-32-14.3-32-32 0-17.6 14.4-32 32-32h285.4c-1.9 17.1-1.9 46.9 0 64z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Network Analysis Made Simple
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Chapter 7: Graph I/O
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/ericmjl/Network-Analysis-Made-Simple/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ericmjl/Network-Analysis-Made-Simple
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="http://nams.ericmjl.com/" title="Network Analysis Made Simple" class="md-nav__button md-logo" aria-label="Network Analysis Made Simple">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zM128 134c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm0 64c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm253.4 250H96c-17.7 0-32-14.3-32-32 0-17.6 14.4-32 32-32h285.4c-1.9 17.1-1.9 46.9 0 64z"/></svg>
+
+    </a>
+    Network Analysis Made Simple
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/ericmjl/Network-Analysis-Made-Simple/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ericmjl/Network-Analysis-Made-Simple
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Network Analysis Made Simple
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Network Analysis Made Simple" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Network Analysis Made Simple
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Welcome" class="md-nav__link">
+      Welcome
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Preface
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Preface" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Preface
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../preface/setup/" title="Get Setup" class="md-nav__link">
+      Get Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../preface/prereqs/" title="Prerequisites" class="md-nav__link">
+      Prerequisites
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../preface/goals/" title="Learning Goals" class="md-nav__link">
+      Learning Goals
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Section 1: Introduction
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Section 1: Introduction" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Section 1: Introduction
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../introduction/graphs/" title="Chapter 1: Introduction to Graphs" class="md-nav__link">
+      Chapter 1: Introduction to Graphs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../introduction/networkx-intro/" title="Chapter 2: The NetworkX API" class="md-nav__link">
+      Chapter 2: The NetworkX API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../introduction/viz/" title="Chapter 3: Graph Visualization" class="md-nav__link">
+      Chapter 3: Graph Visualization
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Section 2: Algorithms
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Section 2: Algorithms" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Section 2: Algorithms
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../algorithms/hubs/" title="Chapter 4: Hubs" class="md-nav__link">
+      Chapter 4: Hubs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../algorithms/paths/" title="Chapter 5: Paths" class="md-nav__link">
+      Chapter 5: Paths
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../algorithms/structures/" title="Chapter 6: Structures" class="md-nav__link">
+      Chapter 6: Structures
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      Section 3: Practical Matters
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Section 3: Practical Matters" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Section 3: Practical Matters
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Chapter 7: Graph I/O
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Chapter 7: Graph I/O" class="md-nav__link md-nav__link--active">
+      Chapter 7: Graph I/O
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-data-as-tables" class="md-nav__link">
+    Graph Data as Tables
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph Data as Tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-set-as-tables" class="md-nav__link">
+    Node set as tables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-set-as-tables" class="md-nav__link">
+    Edge set as tables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combined-representation" class="md-nav__link">
+    Combined Representation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    Dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-model" class="md-nav__link">
+    Graph Model
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-networkx-graph-from-pandas-edgelist" class="md-nav__link">
+    Create NetworkX graph from pandas edgelist
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspect-the-graph" class="md-nav__link">
+    Inspect the graph
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotate-node-metadata" class="md-nav__link">
+    Annotate node metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-filter-graph-edges" class="md-nav__link">
+    Exercise: Filter graph edges
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualize-using-geoplot" class="md-nav__link">
+    Visualize using GeoPlot
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pickling-graphs" class="md-nav__link">
+    Pickling Graphs
+  </a>
+  
+    <nav class="md-nav" aria-label="Pickling Graphs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-checking-graph-integrity" class="md-nav__link">
+    Exercise: checking graph integrity
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-text-formats" class="md-nav__link">
+    Other text formats
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    Solutions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../testing/" title="Chapter 8: Testing" class="md-nav__link">
+      Chapter 8: Testing
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Section 4: Advanced Topics
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Section 4: Advanced Topics" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Section 4: Advanced Topics
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/bipartite/" title="Chapter 9: Bipartite Graphs" class="md-nav__link">
+      Chapter 9: Bipartite Graphs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/linalg/" title="Chapter 10: Linear Algebra" class="md-nav__link">
+      Chapter 10: Linear Algebra
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../advanced/stats/" title="Chapter 11: Statistical Inference" class="md-nav__link">
+      Chapter 11: Statistical Inference
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Section 5: Case Studies
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Section 5: Case Studies" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Section 5: Case Studies
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../casestudies/gameofthrones/" title="Chapter 12: Game of Thrones" class="md-nav__link">
+      Chapter 12: Game of Thrones
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../casestudies/airport/" title="Chapter 13: Airport Network" class="md-nav__link">
+      Chapter 13: Airport Network
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../learn-more/" title="Further Learning" class="md-nav__link">
+      Further Learning
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-9" type="checkbox" id="nav-9">
+    
+    <label class="md-nav__link" for="nav-9">
+      Development
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Development" data-md-level="1">
+      <label class="md-nav__title" for="nav-9">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Development
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../devdocs/style/" title="Style Guide" class="md-nav__link">
+      Style Guide
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-data-as-tables" class="md-nav__link">
+    Graph Data as Tables
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph Data as Tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-set-as-tables" class="md-nav__link">
+    Node set as tables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-set-as-tables" class="md-nav__link">
+    Edge set as tables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combined-representation" class="md-nav__link">
+    Combined Representation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    Dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-model" class="md-nav__link">
+    Graph Model
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-networkx-graph-from-pandas-edgelist" class="md-nav__link">
+    Create NetworkX graph from pandas edgelist
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspect-the-graph" class="md-nav__link">
+    Inspect the graph
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotate-node-metadata" class="md-nav__link">
+    Annotate node metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-filter-graph-edges" class="md-nav__link">
+    Exercise: Filter graph edges
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualize-using-geoplot" class="md-nav__link">
+    Visualize using GeoPlot
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pickling-graphs" class="md-nav__link">
+    Pickling Graphs
+  </a>
+  
+    <nav class="md-nav" aria-label="Pickling Graphs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-checking-graph-integrity" class="md-nav__link">
+    Exercise: checking graph integrity
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-text-formats" class="md-nav__link">
+    Other text formats
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    Solutions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/ericmjl/Network-Analysis-Made-Simple/edit/master/docs/practical/io.ipynb" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                  <h1>Chapter 7: Graph I/O</h1>
+                
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var scriptElement = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    scriptElement.src = widgetRendererSrc;
+    document.body.appendChild(scriptElement);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
+<span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;retina&#39;</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h2 id="introduction">Introduction</h2>
+<p>In order to get you familiar with graph ideas,
+I have deliberately chosen to steer away from
+the more pedantic matters
+of loading graph data to and from disk.
+That said, the following scenario will eventually happen,
+where a graph dataset lands on your lap,
+and you'll need to load it in memory 
+and start analyzing it.</p>
+<p>Thus, we're going to go through graph I/O,
+specifically the APIs on how to convert
+graph data that comes to you
+into that magical NetworkX object <code>G</code>.</p>
+<p>Let's get going!</p>
+<h2 id="graph-data-as-tables">Graph Data as Tables</h2>
+<p>Let's recall what we've learned in the introductory chapters.
+Graphs can be represented using two <strong>sets</strong>:</p>
+<ul>
+<li>Node set</li>
+<li>Edge set</li>
+</ul>
+<h3 id="node-set-as-tables">Node set as tables</h3>
+<p>Let's say we had a graph with 3 nodes in it: <code>A, B, C</code>.
+We could represent it in plain text, computer-readable format:</p>
+<div class="highlight"><pre><span></span><code>A
+B
+C
+</code></pre></div>
+
+<p>Suppose the nodes also had metadata.
+Then, we could tag on metadata as well:</p>
+<div class="highlight"><pre><span></span><code>A, circle, 5
+B, circle, 7
+C, square, 9
+</code></pre></div>
+
+<p>Does this look familiar to you?
+Yes, node sets can be stored in CSV format,
+with one of the columns being node ID,
+and the rest of the columns being metadata.</p>
+<h3 id="edge-set-as-tables">Edge set as tables</h3>
+<p>If, between the nodes, we had 4 edges (this is a directed graph),
+we can also represent those edges in plain text, computer-readable format:</p>
+<div class="highlight"><pre><span></span><code>A, C
+B, C
+A, B
+C, A
+</code></pre></div>
+
+<p>And let's say we also had other metadata,
+we can represent it in the same CSV format:</p>
+<div class="highlight"><pre><span></span><code>A, C, red
+B, C, orange
+A, B, yellow
+C, A, green
+</code></pre></div>
+
+<p>If you've been in the data world for a while,
+this should not look foreign to you.
+Yes, edge sets can be stored in CSV format too!
+Two of the columns represent the nodes involved in an edge,
+and the rest of the columns represent the metadata.</p>
+<h3 id="combined-representation">Combined Representation</h3>
+<p>In fact, one might also choose to combine
+the node set and edge set tables together in a merged format:</p>
+<div class="highlight"><pre><span></span><code>n1, n2, colour, shape1, num1, shape2, num2
+A,  C,  red,    circle, 5,    square, 9
+B,  C,  orange, circle, 7,    square, 9
+A,  B,  yellow, circle, 5,    circle, 7
+C,  A,  green,  square, 9,    circle, 5
+</code></pre></div>
+
+<p>In this chapter, the datasets that we will be looking at
+are going to be formatted in both ways.
+Let's get going.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h2 id="dataset">Dataset</h2>
+<p>We will be working with the Divvy bike sharing dataset.</p>
+<blockquote>
+<p>Divvy is a bike sharing service in Chicago.
+Since 2013, Divvy has released their bike sharing dataset to the public.
+The 2013 dataset is comprised of two files: 
+- <code>Divvy_Stations_2013.csv</code>, containing the stations in the system, and
+- <code>DivvyTrips_2013.csv</code>, containing the trips.</p>
+</blockquote>
+<p>Let's dig into the data!
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pyprojroot</span> <span class="kn">import</span> <span class="n">here</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+Firstly, we need to unzip the dataset:
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># This block of code checks to make sure that a particular directory is present.</span>
+<span class="k">if</span> <span class="s2">&quot;divvy_2013&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">here</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;datasets/&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unzipping the divvy_2013.zip file in the datasets folder.&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">here</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;datasets/divvy_2013.zip&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
+        <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">here</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;datasets&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+Now, let's load in both tables.</p>
+<p>First is the <code>stations</code> table:
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">stations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">here</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;datasets/divvy_2013/Divvy_Stations_2013.csv&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;online date&#39;</span><span class="p">],</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">stations</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+<table>
+<thead><tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:right">latitude</th>
+<th style="text-align:right">longitude</th>
+<th style="text-align:right">dpcapacity</th>
+<th style="text-align:right">landmark</th>
+<th style="text-align:left">online date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">5</td>
+<td style="text-align:left">State St &amp; Harrison St</td>
+<td style="text-align:right">41.874</td>
+<td style="text-align:right">-87.6277</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">30</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">13</td>
+<td style="text-align:left">Wilton Ave &amp; Diversey Pkwy</td>
+<td style="text-align:right">41.9325</td>
+<td style="text-align:right">-87.6527</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">66</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">14</td>
+<td style="text-align:left">Morgan St &amp; 18th St</td>
+<td style="text-align:right">41.8581</td>
+<td style="text-align:right">-87.6511</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">163</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">15</td>
+<td style="text-align:left">Racine Ave &amp; 18th St</td>
+<td style="text-align:right">41.8582</td>
+<td style="text-align:right">-87.6565</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">164</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">16</td>
+<td style="text-align:left">Wood St &amp; North Ave</td>
+<td style="text-align:right">41.9103</td>
+<td style="text-align:right">-87.6725</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">223</td>
+<td style="text-align:left">2013-08-12</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">stations</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+<table>
+<thead><tr>
+<th style="text-align:left"></th>
+<th style="text-align:right">id</th>
+<th style="text-align:right">latitude</th>
+<th style="text-align:right">longitude</th>
+<th style="text-align:right">dpcapacity</th>
+<th style="text-align:right">landmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">count</td>
+<td style="text-align:right">300</td>
+<td style="text-align:right">300</td>
+<td style="text-align:right">300</td>
+<td style="text-align:right">300</td>
+<td style="text-align:right">300</td>
+</tr>
+<tr>
+<td style="text-align:left">mean</td>
+<td style="text-align:right">189.063</td>
+<td style="text-align:right">41.8963</td>
+<td style="text-align:right">-87.6482</td>
+<td style="text-align:right">16.8</td>
+<td style="text-align:right">192.013</td>
+</tr>
+<tr>
+<td style="text-align:left">std</td>
+<td style="text-align:right">99.4845</td>
+<td style="text-align:right">0.0409522</td>
+<td style="text-align:right">0.0230011</td>
+<td style="text-align:right">4.67399</td>
+<td style="text-align:right">120.535</td>
+</tr>
+<tr>
+<td style="text-align:left">min</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">41.7887</td>
+<td style="text-align:right">-87.7079</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:left">25%</td>
+<td style="text-align:right">108.75</td>
+<td style="text-align:right">41.8718</td>
+<td style="text-align:right">-87.6658</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">83.75</td>
+</tr>
+<tr>
+<td style="text-align:left">50%</td>
+<td style="text-align:right">196.5</td>
+<td style="text-align:right">41.8946</td>
+<td style="text-align:right">-87.6486</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">184.5</td>
+</tr>
+<tr>
+<td style="text-align:left">75%</td>
+<td style="text-align:right">276.25</td>
+<td style="text-align:right">41.9264</td>
+<td style="text-align:right">-87.6318</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">288.25</td>
+</tr>
+<tr>
+<td style="text-align:left">max</td>
+<td style="text-align:right">351</td>
+<td style="text-align:right">41.9784</td>
+<td style="text-align:right">-87.5807</td>
+<td style="text-align:right">47</td>
+<td style="text-align:right">440</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+Now, let's load in the <code>trips</code> table.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">trips</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">here</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;datasets/divvy_2013/Divvy_Trips_2013.csv&#39;</span><span class="p">,</span> 
+                    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;starttime&#39;</span><span class="p">,</span> <span class="s1">&#39;stoptime&#39;</span><span class="p">])</span>
+<span class="n">trips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>/home/travis/miniconda/envs/nams/lib/python3.7/site-packages/IPython/core/interactiveshell.py:3146: DtypeWarning: Columns (10) have mixed types.Specify dtype option on import or set low_memory=False.
+  interactivity=interactivity, compiler=compiler, result=result)
+</code>
+</pre>
+</div>
+</div>
+
+<div class="output_area" markdown="1">
+
+<table>
+<thead><tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">trip_id</th>
+<th style="text-align:left">starttime</th>
+<th style="text-align:left">stoptime</th>
+<th style="text-align:right">bikeid</th>
+<th style="text-align:right">tripduration</th>
+<th style="text-align:right">from_station_id</th>
+<th style="text-align:left">from_station_name</th>
+<th style="text-align:right">to_station_id</th>
+<th style="text-align:left">to_station_name</th>
+<th style="text-align:left">usertype</th>
+<th style="text-align:right">gender</th>
+<th style="text-align:right">birthday</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">4118</td>
+<td style="text-align:left">2013-06-27 12:11:00</td>
+<td style="text-align:left">2013-06-27 12:16:00</td>
+<td style="text-align:right">480</td>
+<td style="text-align:right">316</td>
+<td style="text-align:right">85</td>
+<td style="text-align:left">Michigan Ave &amp; Oak St</td>
+<td style="text-align:right">28</td>
+<td style="text-align:left">Larrabee St &amp; Menomonee St</td>
+<td style="text-align:left">Customer</td>
+<td style="text-align:right">nan</td>
+<td style="text-align:right">nan</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4275</td>
+<td style="text-align:left">2013-06-27 14:44:00</td>
+<td style="text-align:left">2013-06-27 14:45:00</td>
+<td style="text-align:right">77</td>
+<td style="text-align:right">64</td>
+<td style="text-align:right">32</td>
+<td style="text-align:left">Racine Ave &amp; Congress Pkwy</td>
+<td style="text-align:right">32</td>
+<td style="text-align:left">Racine Ave &amp; Congress Pkwy</td>
+<td style="text-align:left">Customer</td>
+<td style="text-align:right">nan</td>
+<td style="text-align:right">nan</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">4291</td>
+<td style="text-align:left">2013-06-27 14:58:00</td>
+<td style="text-align:left">2013-06-27 15:05:00</td>
+<td style="text-align:right">77</td>
+<td style="text-align:right">433</td>
+<td style="text-align:right">32</td>
+<td style="text-align:left">Racine Ave &amp; Congress Pkwy</td>
+<td style="text-align:right">19</td>
+<td style="text-align:left">Loomis St &amp; Taylor St</td>
+<td style="text-align:left">Customer</td>
+<td style="text-align:right">nan</td>
+<td style="text-align:right">nan</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">4316</td>
+<td style="text-align:left">2013-06-27 15:06:00</td>
+<td style="text-align:left">2013-06-27 15:09:00</td>
+<td style="text-align:right">77</td>
+<td style="text-align:right">123</td>
+<td style="text-align:right">19</td>
+<td style="text-align:left">Loomis St &amp; Taylor St</td>
+<td style="text-align:right">19</td>
+<td style="text-align:left">Loomis St &amp; Taylor St</td>
+<td style="text-align:left">Customer</td>
+<td style="text-align:right">nan</td>
+<td style="text-align:right">nan</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">4342</td>
+<td style="text-align:left">2013-06-27 15:13:00</td>
+<td style="text-align:left">2013-06-27 15:27:00</td>
+<td style="text-align:right">77</td>
+<td style="text-align:right">852</td>
+<td style="text-align:right">19</td>
+<td style="text-align:left">Loomis St &amp; Taylor St</td>
+<td style="text-align:right">55</td>
+<td style="text-align:left">Halsted St &amp; James M Rochford St</td>
+<td style="text-align:left">Customer</td>
+<td style="text-align:right">nan</td>
+<td style="text-align:right">nan</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">janitor</span>
+<span class="n">trips_summary</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">trips</span>
+    <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;from_station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;to_station_id&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">select_columns</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;from_station_id&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;to_station_id&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;trip_id&quot;</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s2">&quot;trip_id&quot;</span><span class="p">,</span> <span class="s2">&quot;num_trips&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">trips_summary</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+<table>
+<thead><tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">from_station_id</th>
+<th style="text-align:right">to_station_id</th>
+<th style="text-align:right">num_trips</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">232</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">15</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">4</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h2 id="graph-model">Graph Model</h2>
+<p>Given the data, if we wished to use a graph as a data model
+for the number of trips between stations,
+then naturally, nodes would be the stations,
+and edges would be trips between them.</p>
+<p>This graph would be directed,
+as one could have more trips from station A to B
+and less in the reverse.</p>
+</div>
+</div>
+<p>With this definition,
+we can begin graph construction!</p>
+<h3 id="create-networkx-graph-from-pandas-edgelist">Create NetworkX graph from pandas edgelist</h3>
+<p>NetworkX provides an extremely convenient way
+to load data from a pandas DataFrame:
+</div>
+</div></p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_pandas_edgelist</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">trips_summary</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;from_station_id&quot;</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;to_station_id&quot;</span><span class="p">,</span>
+    <span class="n">edge_attr</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_trips&quot;</span><span class="p">],</span>
+    <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span>
+<span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h3 id="inspect-the-graph">Inspect the graph</h3>
+<p>Once the graph is in memory,
+we can inspect it to get out summary graph statistics.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Name: 
+Type: DiGraph
+Number of nodes: 300
+Number of edges: 44422
+Average in degree: 148.0733
+Average out degree: 148.0733
+</code>
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+You'll notice that the edge metadata have been added correctly: we have recorded in there the number of trips between stations.
+</div>
+</div></p>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[(5, 5, {&#39;num_trips&#39;: 232}),
+ (5, 13, {&#39;num_trips&#39;: 1}),
+ (5, 14, {&#39;num_trips&#39;: 15}),
+ (5, 15, {&#39;num_trips&#39;: 9}),
+ (5, 16, {&#39;num_trips&#39;: 4})]</code>
+</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+However, the node metadata is not present:
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[(5, {}), (13, {}), (14, {}), (15, {}), (16, {})]</code>
+</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h3 id="annotate-node-metadata">Annotate node metadata</h3>
+<p>We have rich station data on hand,
+such as the longitude and latitude of each station,
+and it would be a pity to discard it,
+especially when we can potentially use it as part of the analysis
+or for visualization purposes.
+Let's see how we can add this information in.</p>
+<p>Firstly, recall what the <code>stations</code> dataframe looked like:
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">stations</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+<table>
+<thead><tr>
+<th style="text-align:right"></th>
+<th style="text-align:right">id</th>
+<th style="text-align:left">name</th>
+<th style="text-align:right">latitude</th>
+<th style="text-align:right">longitude</th>
+<th style="text-align:right">dpcapacity</th>
+<th style="text-align:right">landmark</th>
+<th style="text-align:left">online date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">5</td>
+<td style="text-align:left">State St &amp; Harrison St</td>
+<td style="text-align:right">41.874</td>
+<td style="text-align:right">-87.6277</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">30</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">13</td>
+<td style="text-align:left">Wilton Ave &amp; Diversey Pkwy</td>
+<td style="text-align:right">41.9325</td>
+<td style="text-align:right">-87.6527</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">66</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">14</td>
+<td style="text-align:left">Morgan St &amp; 18th St</td>
+<td style="text-align:right">41.8581</td>
+<td style="text-align:right">-87.6511</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">163</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">15</td>
+<td style="text-align:left">Racine Ave &amp; 18th St</td>
+<td style="text-align:right">41.8582</td>
+<td style="text-align:right">-87.6565</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">164</td>
+<td style="text-align:left">2013-06-28</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">16</td>
+<td style="text-align:left">Wood St &amp; North Ave</td>
+<td style="text-align:right">41.9103</td>
+<td style="text-align:right">-87.6725</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">223</td>
+<td style="text-align:left">2013-08-12</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+The <code>id</code> column gives us the node ID in the graph,
+so if we set <code>id</code> to be the index,
+if we then also loop over each row,
+we can treat the rest of the columns as dictionary keys
+and values as dictionary values,
+and add the information into the graph.</p>
+<p>Let's see this in action.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered"></div>
+</div>
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">metadata</span> <span class="ow">in</span> <span class="n">stations</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+</code></pre></div>
+
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+Now, our node metadata should be populated.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[(5,
+  {&#39;name&#39;: &#39;State St &amp; Harrison St&#39;,
+   &#39;latitude&#39;: 41.87395806,
+   &#39;longitude&#39;: -87.62773949,
+   &#39;dpcapacity&#39;: 19,
+   &#39;landmark&#39;: 30,
+   &#39;online date&#39;: Timestamp(&#39;2013-06-28 00:00:00&#39;)}),
+ (13,
+  {&#39;name&#39;: &#39;Wilton Ave &amp; Diversey Pkwy&#39;,
+   &#39;latitude&#39;: 41.93250008,
+   &#39;longitude&#39;: -87.65268082,
+   &#39;dpcapacity&#39;: 19,
+   &#39;landmark&#39;: 66,
+   &#39;online date&#39;: Timestamp(&#39;2013-06-28 00:00:00&#39;)}),
+ (14,
+  {&#39;name&#39;: &#39;Morgan St &amp; 18th St&#39;,
+   &#39;latitude&#39;: 41.858086,
+   &#39;longitude&#39;: -87.651073,
+   &#39;dpcapacity&#39;: 15,
+   &#39;landmark&#39;: 163,
+   &#39;online date&#39;: Timestamp(&#39;2013-06-28 00:00:00&#39;)}),
+ (15,
+  {&#39;name&#39;: &#39;Racine Ave &amp; 18th St&#39;,
+   &#39;latitude&#39;: 41.85818061,
+   &#39;longitude&#39;: -87.65648665,
+   &#39;dpcapacity&#39;: 15,
+   &#39;landmark&#39;: 164,
+   &#39;online date&#39;: Timestamp(&#39;2013-06-28 00:00:00&#39;)}),
+ (16,
+  {&#39;name&#39;: &#39;Wood St &amp; North Ave&#39;,
+   &#39;latitude&#39;: 41.910329,
+   &#39;longitude&#39;: -87.672516,
+   &#39;dpcapacity&#39;: 15,
+   &#39;landmark&#39;: 223,
+   &#39;online date&#39;: Timestamp(&#39;2013-08-12 00:00:00&#39;)})]</code>
+</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+In <code>nxviz</code>, a <code>GeoPlot</code> object is available
+that allows you to quickly visualize
+a graph that has geographic data.
+However, being <code>matplotlib</code>-based,
+it is going to be quickly overwhelmed
+by the sheer number of edges.</p>
+<p>As such, we are going to first filter the edges.</p>
+<h3 id="exercise-filter-graph-edges">Exercise: Filter graph edges</h3>
+</div>
+</div>
+<blockquote>
+<p>Leveraging what you know about how to manipulate graphs,
+now try <em>filtering</em> edges.
+</p>
+</blockquote>
+<p><em>Hint: NetworkX graph objects can be deep-copied using <code>G.copy()</code>:</em></p>
+<div class="highlight"><pre><span></span><code><span class="n">G_copy</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div>
+
+<p><em>Hint: NetworkX graph objects also let you remove edges:</em></p>
+<p><div class="highlight"><pre><span></span><code><span class="n">G</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span>  <span class="c1"># does not return anything</span>
+</code></pre></div>
+</div>
+</div></p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">filter_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">minimum_num_trips</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter the graph such that </span>
+<span class="sd">    only edges that have minimum_num_trips or more</span>
+<span class="sd">    are present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G_filtered</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">____</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">_____</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">____</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="n">___________</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">___</span><span class="p">:</span>
+            <span class="n">G_________</span><span class="o">.</span><span class="n">___________</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">G_filtered</span>
+
+<span class="kn">from</span> <span class="nn">nams.solutions.io</span> <span class="kn">import</span> <span class="n">filter_graph</span>
+
+<span class="n">G_filtered</span> <span class="o">=</span> <span class="n">filter_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h3 id="visualize-using-geoplot">Visualize using GeoPlot</h3>
+<p><code>nxviz</code> provides a GeoPlot object
+that lets you quickly visualize geospatial graph data.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<details class="note"><summary>Geospatial Viz</summary><p>As the creator of <code>nxviz</code>,
+I would recommend using proper geospatial packages
+to build custom geospatial graph viz,
+such as <a href="http://pysal.org/"><code>pysal</code></a>.)</p>
+<p>That said, <code>nxviz</code> can probably do what you need
+for a quick-and-dirty view of the data.</p>
+</details>
+<p></div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">nxviz</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">nxviz</span><span class="o">.</span><span class="n">GeoPlot</span><span class="p">(</span><span class="n">G_filtered</span><span class="p">,</span> <span class="n">node_lat</span><span class="o">=</span><span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="n">node_lon</span><span class="o">=</span><span class="s2">&quot;longitude&quot;</span><span class="p">)</span>
+<span class="n">c</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+
+
+<div class="output_png output_subarea ">
+<img src="output_31_0.png"
+width=235
+height=340
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+Does that look familiar to you? Looks quite a bit like Chicago, I'd say :)</p>
+<p>Jesting aside, this visualization does help illustrate
+that the majority of trips occur between stations that are
+near the city center.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing text_cell rendered"></div>
+</div>
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h2 id="pickling-graphs">Pickling Graphs</h2>
+<p>Since NetworkX graphs are Python objects,
+the canonical way to save them is by pickling them.
+You can do this using:</p>
+<div class="highlight"><pre><span></span><code><span class="n">nx</span><span class="o">.</span><span class="n">write_gpickle</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Here's an example in action:
+</div>
+</div></p>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">nx</span><span class="o">.</span><span class="n">write_gpickle</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;/tmp/divvy.pkl&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1">
+And just to show that it can be loaded back into memory:
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">G_loaded</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">read_gpickle</span><span class="p">(</span><span class="s2">&quot;/tmp/divvy.pkl&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h3 id="exercise-checking-graph-integrity">Exercise: checking graph integrity</h3>
+<p>If you get a graph dataset as a pickle,
+you should always check it against reference properties
+to make sure of its data integrity.</p>
+<blockquote>
+<p>Write a function that tests that the graph
+has the correct number of nodes and edges inside it.
+</div>
+</div></p>
+</blockquote>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_graph_integrity</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Test integrity of raw Divvy graph.&quot;&quot;&quot;</span>
+    <span class="c1"># Your solution here</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">nams.solutions.io</span> <span class="kn">import</span> <span class="n">test_graph_integrity</span>
+
+<span class="n">test_graph_integrity</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h2 id="other-text-formats">Other text formats</h2>
+<p>CSV files and <code>pandas</code> DataFrames
+give us a convenient way to store graph data,
+and if possible, do insist with your data collaborators
+that they provide you with graph data that are in this format.
+If they don't, however, no sweat!
+After all, Python is super versatile.</p>
+<p>In this ebook, we have loaded data in
+from non-CSV sources,
+sometimes by parsing text files raw,
+sometimes by treating special characters as delimiters in a CSV-like file,
+and sometimes by resorting to parsing JSON.</p>
+<p>You can see other examples of how we load data
+by browsing through the source file of <code>load_data.py</code>
+and studying how we construct graph objects.
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<p><div class="inner_cell" markdown="1">
+<div class="text_cell_render border-box-sizing rendered_html" markdown="1"></p>
+<h2 id="solutions">Solutions</h2>
+<p>The solutions to this chapter's exercises are below
+</div>
+</div></p>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">nams.solutions</span> <span class="kn">import</span> <span class="n">io</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">io</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+
+<div class="output_wrapper" markdown="1">
+<div class="output" markdown="1">
+
+
+<div class="output_area" markdown="1">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>&#34;&#34;&#34;Solutions to I/O chapter&#34;&#34;&#34;
+
+
+def filter_graph(G, minimum_num_trips):
+    &#34;&#34;&#34;
+    Filter the graph such that
+    only edges that have minimum_num_trips or more
+    are present.
+    &#34;&#34;&#34;
+    G_filtered = G.copy()
+    for u, v, d in G.edges(data=True):
+        if d[&#34;num_trips&#34;] &lt; minimum_num_trips:
+            G_filtered.remove_edge(u, v)
+    return G_filtered
+
+
+def test_graph_integrity(G):
+    &#34;&#34;&#34;Test integrity of raw Divvy graph.&#34;&#34;&#34;
+    assert len(G.nodes()) == 300
+    assert len(G.edges()) == 44422
+
+</code>
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../../algorithms/structures/" title="Chapter 6: Structures" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Chapter 6: Structures
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../testing/" title="Chapter 8: Testing" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Chapter 8: Testing
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+        
+        
+      
+      <a href="https://github.com/ericmjl" target="_blank" rel="noopener" title="github.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://twitter.com/ericmjl" target="_blank" rel="noopener" title="twitter.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+      </a>
+    
+      
+      
+        
+        
+      
+      <a href="https://linkedin.com/in/ericmjl" target="_blank" rel="noopener" title="linkedin.com" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.df0def68.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ba57d267.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: ["instant"],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+        <script src="https://hypothes.is/embed.js"></script>
+      
+    
+  </body>
+</html>
