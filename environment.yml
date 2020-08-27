@@ -1,0 +1,37 @@
+name: nams # Network Analysis Made Simple
+channels:
+  - defaults
+  - conda-forge
+  - ericmjl
+dependencies:
+  - python=3.7
+  - matplotlib
+  - networkx
+  - scipy
+  - numpy
+  - nxviz
+  - hiveplot
+  - jupyter
+  - jupyterlab
+  - ipykernel
+  - pandas
+  - rise
+  - python-louvain
+  - tqdm
+  - ffmpeg
+  - nbstripout
+  - pygments
+  - pip
+  - pyprojroot
+  - isort
+  - black
+  - pyjanitor
+  - pre-commit
+  - tabulate  # used for exporting dataframe as Markdown tables
+  - pip:
+      - mkdocs
+      - mkdocs-material
+      - pymdown-extensions
+      - mknotebooks
+      - mkdocstrings
+      - git+http://github.com/ericmjl/Network-Analysis-Made-Simple@master
